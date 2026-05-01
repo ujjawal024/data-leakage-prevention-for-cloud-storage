@@ -1,0 +1,124 @@
+====================================================
+   DLP SHIELD — HOW TO RUN THE PROJECT
+====================================================
+
+REQUIREMENTS
+------------
+  - Python 3.9+
+  - Node.js 18+
+  - npm
+
+====================================================
+  STEP 1 — BACKEND SETUP (Run Once)
+====================================================
+
+Open a terminal and go to the backend folder:
+
+  cd dlp-system\backend
+
+Install Python dependencies:
+
+  pip install -r requirements.txt
+
+Seed the database with test users & files:
+
+  python seed.py
+
+    Default credentials created:
+      admin    / Admin@123
+      manager  / Manager@123
+      employee / Emp@1234
+
+====================================================
+  STEP 2 — START THE BACKEND SERVER
+====================================================
+
+From the backend folder (dlp-system\backend):
+
+  python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  Backend runs at:   http://localhost:8000
+  API docs (Swagger): http://localhost:8000/docs
+  Health check:      http://localhost:8000/health
+
+====================================================
+  STEP 3 — FRONTEND SETUP (Run Once)
+====================================================
+
+Open a NEW terminal and go to the frontend folder:
+
+  cd dlp-system\frontend
+
+Install Node dependencies:
+
+  npm install
+
+====================================================
+  STEP 4 — START THE FRONTEND SERVER
+====================================================
+
+From the frontend folder (dlp-system\frontend):
+
+  npm run dev
+
+  Frontend runs at: http://localhost:3000
+
+====================================================
+  STEP 5 — OPEN IN BROWSER
+====================================================
+
+  Open: http://localhost:3000
+
+  Log in with any of the demo accounts:
+    admin    / Admin@123
+    manager  / Manager@123
+    employee / Emp@1234
+
+====================================================
+  TO STOP THE PROJECT
+====================================================
+
+  In the terminal running the backend:
+    Press CTRL + C
+
+  In the terminal running the frontend:
+    Press CTRL + C
+
+  OR kill all at once (PowerShell):
+    Get-Process -Name "python","node" | Stop-Process -Force
+
+====================================================
+  TO RESTART THE PROJECT (Quick)
+====================================================
+
+  Terminal 1 (backend):
+    cd dlp-system\backend
+    python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  Terminal 2 (frontend):
+    cd dlp-system\frontend
+    npm run dev
+
+====================================================
+  SUMMARY OF ALL COMMANDS
+====================================================
+
+  # Install backend deps (once)
+  pip install -r requirements.txt
+
+  # Seed database (once)
+  python seed.py
+
+  # Run backend
+  python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Install frontend deps (once)
+  npm install
+
+  # Run frontend
+  npm run dev
+
+  # Kill all servers (PowerShell)
+  Get-Process -Name "python","node" | Stop-Process -Force
+
+====================================================

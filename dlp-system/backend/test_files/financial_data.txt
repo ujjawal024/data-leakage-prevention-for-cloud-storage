@@ -1,0 +1,4 @@
+Customer Payment Details
+Card Number: 4111 1111 1111 1111
+IFSC Code: HDFC0001234
+Account balance transfer initiated.

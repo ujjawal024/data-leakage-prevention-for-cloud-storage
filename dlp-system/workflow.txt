@@ -1,0 +1,63 @@
+DLP SHIELD - PROJECT WORKFLOW
+==============================
+
+1. USER AUTHENTICATION
+----------------------
+- User logs in via the React frontend.
+- Backend validates credentials and issues a JWT token.
+- All subsequent requests include this token in the 'Authorization: Bearer <token>' header.
+
+2. FILE UPLOAD & INTERCEPTION
+-----------------------------
+- The user selects a file for upload.
+- The frontend sends a multipart/form-data request to the POST /files/upload endpoint.
+- The FastAPI middleware receives the file stream.
+
+3. DLP ANALYSIS PIPELINE (The "Shield")
+---------------------------------------
+The file passes through several validation and inspection phases:
+
+A. SIZE & EXTENSION CHECK
+   - Ensures the file is within size limits (50MB).
+   - Blocks forbidden extensions (e.g., .exe, .sh).
+
+B. CONTENT INSPECTION (Regex Engine)
+   - Scans the file content for sensitive patterns:
+     * PII (Email, Phone, Aadhaar, PAN)
+     * Secrets (API Keys, Passwords, SSH Keys)
+     * Financials (Credit Cards, IFSC Codes, SWIFT)
+     * Keywords (INTERNAL, CONFIDENTIAL, PROPRIETARY)
+
+C. CLASSIFICATION logic
+   - Assigns a sensitivity level: PUBLIC, CONFIDENTIAL, or RESTRICTED.
+
+D. INTEGRITY & FINGERPRINTING
+   - Computes SHA-256 hash.
+   - Checks against the 'FingerprintStore' to detect if this file (or a slightly modified version) has been seen before.
+
+4. RBAC POLICY ENFORCEMENT
+--------------------------
+- Maps the 'User Role' to the 'File Classification':
+     * employee -> Allowed to upload PUBLIC only.
+     * manager  -> Allowed to upload PUBLIC and CONFIDENTIAL.
+     * admin    -> Allowed to upload ALL classifications.
+
+5. FINAL OUTCOME
+----------------
+- IF VIOLATION:
+  * File is discarded.
+  * A 'Policy Violation' Alert is generated.
+  * An Audit Log entry is created (Level: WARNING/ERROR).
+  * System returns HTTP 403 (Forbidden).
+
+- IF ALLOWED:
+  * File is uploaded to the active Cloud Provider (Local/S3/GCP/Azure).
+  * A File Record is created in the database.
+  * An 'Upload Success' Audit Log entry is created (Level: INFO).
+  * System returns HTTP 200 (Success).
+
+6. MONITORING & AUDITING
+------------------------
+- Admins can view the 'Audit Logs' to track system-wide activity.
+- Admins receive real-time or near-real-time 'Alerts' for blocked attempts.
+- Dashboard provides aggregate stats (Total Uploads, Blocked Files, Storage usage).
