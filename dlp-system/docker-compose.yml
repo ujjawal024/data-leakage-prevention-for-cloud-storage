@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dlp_user
+      POSTGRES_PASSWORD: dlp_password
+      POSTGRES_DB: dlp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://dlp_user:dlp_password@db:5432/dlp_db
+      - CLOUD_PROVIDER=local
+      - LOCAL_STORAGE_PATH=/app/local_storage
+      - SECRET_KEY=a_very_secret_key_for_development
+    volumes:
+      - local_storage_data:/app/local_storage
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  local_storage_data:

@@ -26,9 +26,9 @@ from routes.admin_routes import router as admin_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create all database tables at startup."""
-    Base.metadata.create_all(bind=engine)
-    print("[OK] Database tables initialised")
+    """Lifespan event."""
+    # Database tables are now managed by Alembic migrations
+    print("[OK] Starting DLP Shield API")
     yield
 
 # ──────────────────────────────────────────────
